@@ -1,5 +1,5 @@
 import { createConfig, mergeAbis } from 'ponder';
-import { arbitrum, base, mainnet, polygon } from 'viem/chains';
+import { arbitrum, base, mainnet } from 'viem/chains';
 import { createPublicClient, erc20Abi, http } from 'viem';
 import {
 	ADDRESS,
@@ -38,14 +38,12 @@ const requireRpcUrl = (chain: string, envVar: string) => {
 const rpcUrls = {
 	Ethereum: requireRpcUrl('Ethereum', 'RPC_URL_ETHEREUM'),
 	Base: requireRpcUrl('Base', 'RPC_URL_BASE'),
-	Polygon: requireRpcUrl('Polygon', 'RPC_URL_POLYGON'),
 	Arbitrum: requireRpcUrl('Arbitrum', 'RPC_URL_ARBITRUM'),
 };
 
 console.log('[production-6] RPC hostnames', {
 	Ethereum: new URL(rpcUrls.Ethereum).hostname,
 	Base: new URL(rpcUrls.Base).hostname,
-	Polygon: new URL(rpcUrls.Polygon).hostname,
 	Arbitrum: new URL(rpcUrls.Arbitrum).hostname,
 });
 
@@ -66,14 +64,6 @@ export const config = {
 	},
 
 	// multichain support
-	[polygon.id]: {
-		rpc: rpcUrls.Polygon,
-		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '1'),
-		pollingInterval: parseInt(process.env.POLLING_INTERVAL_MS || '30000'),
-		ethGetLogsBlockRange: 10,
-		startBridgedFrankencoin: 72384538,
-		startSavingsReferal: 72993144,
-	},
 	[arbitrum.id]: {
 		rpc: rpcUrls.Arbitrum,
 		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '1'),
@@ -115,13 +105,6 @@ export default createConfig({
 		},
 
 		// ### MULTI CHAIN SUPPORT ###
-		[polygon.name]: {
-			id: polygon.id,
-			maxRequestsPerSecond: config[polygon.id].maxRequestsPerSecond,
-			pollingInterval: config[polygon.id].pollingInterval,
-			ethGetLogsBlockRange: config[polygon.id].ethGetLogsBlockRange,
-			rpc: http(config[polygon.id].rpc),
-		},
 		[arbitrum.name]: {
 			id: arbitrum.id,
 			maxRequestsPerSecond: config[arbitrum.id].maxRequestsPerSecond,
@@ -146,10 +129,6 @@ export default createConfig({
 				[mainnet.name]: {
 					address: addr[mainnet.id].frankencoin,
 					startBlock: config[mainnet.id].startFrankencoin,
-				},
-				[polygon.name]: {
-					address: addr[polygon.id].ccipBridgedFrankencoin,
-					startBlock: config[polygon.id].startBridgedFrankencoin,
 				},
 				[arbitrum.name]: {
 					address: addr[arbitrum.id].ccipBridgedFrankencoin,
@@ -226,10 +205,6 @@ export default createConfig({
 					address: [addr[mainnet.id].savingsV2, addr[mainnet.id].savingsReferral],
 					startBlock: config[mainnet.id].startMintingHubV2,
 				},
-				[polygon.name]: {
-					address: [addr[polygon.id].ccipBridgedSavings],
-					startBlock: config[polygon.id].startBridgedFrankencoin,
-				},
 				[arbitrum.name]: {
 					address: [addr[arbitrum.id].ccipBridgedSavings],
 					startBlock: config[arbitrum.id].startBridgedFrankencoin,
@@ -247,10 +222,6 @@ export default createConfig({
 				[mainnet.name]: {
 					address: [addr[mainnet.id].savingsReferral],
 					startBlock: config[mainnet.id].startSavingsReferal,
-				},
-				[polygon.name]: {
-					address: [addr[polygon.id].ccipBridgedSavings],
-					startBlock: config[polygon.id].startSavingsReferal,
 				},
 				[arbitrum.name]: {
 					address: [addr[arbitrum.id].ccipBridgedSavings],
@@ -276,10 +247,6 @@ export default createConfig({
 				[mainnet.name]: {
 					address: [addr[mainnet.id].frankencoin, addr[mainnet.id].equity],
 					startBlock: config[mainnet.id].startFrankencoin,
-				},
-				[polygon.name]: {
-					address: [addr[polygon.id].ccipBridgedFrankencoin],
-					startBlock: config[polygon.id].startBridgedFrankencoin,
 				},
 				[arbitrum.name]: {
 					address: [addr[arbitrum.id].ccipBridgedFrankencoin],
@@ -307,10 +274,6 @@ export default createConfig({
 				[mainnet.name]: {
 					address: [addr[mainnet.id].transferReference],
 					startBlock: config[mainnet.id].startTransferReference,
-				},
-				[polygon.name]: {
-					address: [addr[polygon.id].ccipBridgedFrankencoin],
-					startBlock: config[polygon.id].startBridgedFrankencoin,
 				},
 				[arbitrum.name]: {
 					address: [addr[arbitrum.id].ccipBridgedFrankencoin],
