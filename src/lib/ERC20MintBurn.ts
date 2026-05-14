@@ -2,9 +2,8 @@ import { Event, type Context } from 'ponder:registry';
 import { ERC20Burn, ERC20Status, ERC20Mint, ERC20BalanceMapping, ERC20TotalSupply } from 'ponder:schema';
 import { Address, zeroAddress } from 'viem';
 import { updateTransactionLog } from './TransactionLog';
-import { ADDRESS } from '@frankencoin/zchf';
+import { ADDRESS, ChainMain } from '@frankencoin/zchf';
 import { normalizeAddress, timestampStartOfDay } from '../utils/format';
-import { mainnet } from 'viem/chains';
 
 export async function indexERC20MintBurn(event: Event<'ERC20:Transfer'>, context: Context<'ERC20:Transfer'>) {
 	const token = normalizeAddress(event.log.address);
@@ -17,8 +16,14 @@ export async function indexERC20MintBurn(event: Event<'ERC20:Transfer'>, context
 	// format: in seconds, same as blockchain timestamp
 	const date = timestampStartOfDay(parseInt(String(updated)));
 
-	const frankencoinContract: Address = ADDRESS[mainnet.id].frankencoin;
-	const equityContract: Address = ADDRESS[mainnet.id].equity;
+	let frankencoinContract: Address = zeroAddress;
+	if (chainId == ChainMain.mainnet.id) {
+		frankencoinContract = ADDRESS[chainId].frankencoin;
+	} else {
+		frankencoinContract = ADDRESS[chainId].ccipBridgedFrankencoin;
+	}
+
+	const equityContract: Address = ADDRESS[ChainMain.mainnet.id].equity;
 
 	let kindContract: string = 'Token';
 	if (token === normalizeAddress(frankencoinContract)) kindContract = 'Frankencoin';
