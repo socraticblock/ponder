@@ -21,10 +21,38 @@ import {
 
 export const addr = ADDRESS;
 
+const requireRpcUrl = (chain: string, envVar: string) => {
+	const rpcUrl = process.env[envVar];
+	if (rpcUrl === undefined || rpcUrl.trim() === '') {
+		throw new Error(`[production-6] ${envVar} is required for ${chain}.`);
+	}
+
+	const hostname = new URL(rpcUrl).hostname;
+	if (hostname.includes('alchemy.com')) {
+		throw new Error(`[production-6] ${envVar} for ${chain} must not point to Alchemy.`);
+	}
+
+	return rpcUrl;
+};
+
+const rpcUrls = {
+	Ethereum: requireRpcUrl('Ethereum', 'RPC_URL_ETHEREUM'),
+	Base: requireRpcUrl('Base', 'RPC_URL_BASE'),
+	Polygon: requireRpcUrl('Polygon', 'RPC_URL_POLYGON'),
+	Arbitrum: requireRpcUrl('Arbitrum', 'RPC_URL_ARBITRUM'),
+};
+
+console.log('[production-6] RPC hostnames', {
+	Ethereum: new URL(rpcUrls.Ethereum).hostname,
+	Base: new URL(rpcUrls.Base).hostname,
+	Polygon: new URL(rpcUrls.Polygon).hostname,
+	Arbitrum: new URL(rpcUrls.Arbitrum).hostname,
+});
+
 export const config = {
 	// core deployment
 	[mainnet.id]: {
-		rpc: process.env.RPC_URL_ETHEREUM,
+		rpc: rpcUrls.Ethereum,
 		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '1'),
 		pollingInterval: parseInt(process.env.POLLING_INTERVAL_MS || '30000'),
 		ethGetLogsBlockRange: 100,
@@ -39,7 +67,7 @@ export const config = {
 
 	// multichain support
 	[polygon.id]: {
-		rpc: process.env.RPC_URL_POLYGON,
+		rpc: rpcUrls.Polygon,
 		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '1'),
 		pollingInterval: parseInt(process.env.POLLING_INTERVAL_MS || '30000'),
 		ethGetLogsBlockRange: 200,
@@ -47,7 +75,7 @@ export const config = {
 		startSavingsReferal: 72993144,
 	},
 	[arbitrum.id]: {
-		rpc: process.env.RPC_URL_ARBITRUM,
+		rpc: rpcUrls.Arbitrum,
 		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '1'),
 		pollingInterval: parseInt(process.env.POLLING_INTERVAL_MS || '30000'),
 		ethGetLogsBlockRange: 750,
@@ -55,7 +83,7 @@ export const config = {
 		startSavingsReferal: 349273896,
 	},
 	[base.id]: {
-		rpc: process.env.RPC_URL_BASE,
+		rpc: rpcUrls.Base,
 		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '1'),
 		pollingInterval: parseInt(process.env.POLLING_INTERVAL_MS || '30000'),
 		ethGetLogsBlockRange: 25,
