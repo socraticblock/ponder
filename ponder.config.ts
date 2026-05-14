@@ -1,5 +1,5 @@
 import { createConfig, mergeAbis } from 'ponder';
-import { arbitrum, avalanche, base, gnosis, mainnet, optimism, polygon, sonic } from 'viem/chains';
+import { arbitrum, base, mainnet, polygon } from 'viem/chains';
 import { createPublicClient, erc20Abi, http } from 'viem';
 import {
 	ADDRESS,
@@ -24,10 +24,10 @@ export const addr = ADDRESS;
 export const config = {
 	// core deployment
 	[mainnet.id]: {
-		rpc: `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_RPC_KEY}`,
-		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '10'),
+		rpc: process.env.RPC_URL_ETHEREUM,
+		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '1'),
 		pollingInterval: parseInt(process.env.POLLING_INTERVAL_MS || '30000'),
-		ethGetLogsBlockRange: 500, // ~12s blocks
+		ethGetLogsBlockRange: 100,
 		startFrankencoin: 18451518,
 		startMintingHubV1: 18451536,
 		startMintingHubV2: 21280757,
@@ -39,60 +39,28 @@ export const config = {
 
 	// multichain support
 	[polygon.id]: {
-		rpc: `https://polygon-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_RPC_KEY}`,
-		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '10'),
+		rpc: process.env.RPC_URL_POLYGON,
+		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '1'),
 		pollingInterval: parseInt(process.env.POLLING_INTERVAL_MS || '30000'),
-		ethGetLogsBlockRange: 2000, // ~2s blocks
+		ethGetLogsBlockRange: 200,
 		startBridgedFrankencoin: 72384538,
 		startSavingsReferal: 72993144,
 	},
 	[arbitrum.id]: {
-		rpc: `https://arb-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_RPC_KEY}`,
-		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '10'),
+		rpc: process.env.RPC_URL_ARBITRUM,
+		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '1'),
 		pollingInterval: parseInt(process.env.POLLING_INTERVAL_MS || '30000'),
-		ethGetLogsBlockRange: 10000, // ~250ms blocks — batch more to reduce request count
+		ethGetLogsBlockRange: 750,
 		startBridgedFrankencoin: 343470012,
 		startSavingsReferal: 349273896,
 	},
-	[optimism.id]: {
-		rpc: `https://opt-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_RPC_KEY}`,
-		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '10'),
-		pollingInterval: parseInt(process.env.POLLING_INTERVAL_MS || '30000'),
-		ethGetLogsBlockRange: 2000, // ~2s blocks
-		startBridgedFrankencoin: 136678320,
-		startSavingsReferal: 137404676,
-	},
 	[base.id]: {
-		rpc: `https://base-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_RPC_KEY}`,
-		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '10'),
+		rpc: process.env.RPC_URL_BASE,
+		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '1'),
 		pollingInterval: parseInt(process.env.POLLING_INTERVAL_MS || '30000'),
-		ethGetLogsBlockRange: 2000, // ~2s blocks
+		ethGetLogsBlockRange: 25,
 		startBridgedFrankencoin: 31080190,
 		startSavingsReferal: 31809565,
-	},
-	[avalanche.id]: {
-		rpc: `https://avax-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_RPC_KEY}`,
-		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '10'),
-		pollingInterval: parseInt(process.env.POLLING_INTERVAL_MS || '30000'),
-		ethGetLogsBlockRange: 2000, // ~2s blocks
-		startBridgedFrankencoin: 63337938,
-		startSavingsReferal: 64919925,
-	},
-	[gnosis.id]: {
-		rpc: `https://gnosis-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_RPC_KEY}`,
-		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '10'),
-		pollingInterval: parseInt(process.env.POLLING_INTERVAL_MS || '30000'),
-		ethGetLogsBlockRange: 500, // ~5s blocks
-		startBridgedFrankencoin: 40394536,
-		startSavingsReferal: 40678291,
-	},
-	[sonic.id]: {
-		rpc: `https://sonic-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_RPC_KEY}`,
-		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '10'),
-		pollingInterval: parseInt(process.env.POLLING_INTERVAL_MS || '30000'),
-		ethGetLogsBlockRange: 5000, // ~500ms blocks
-		startBridgedFrankencoin: 31589491,
-		startSavingsReferal: 34961851,
 	},
 };
 
@@ -133,40 +101,12 @@ export default createConfig({
 			ethGetLogsBlockRange: config[arbitrum.id].ethGetLogsBlockRange,
 			rpc: http(config[arbitrum.id].rpc),
 		},
-		[optimism.name]: {
-			id: optimism.id,
-			maxRequestsPerSecond: config[optimism.id].maxRequestsPerSecond,
-			pollingInterval: config[optimism.id].pollingInterval,
-			ethGetLogsBlockRange: config[optimism.id].ethGetLogsBlockRange,
-			rpc: http(config[optimism.id].rpc),
-		},
 		[base.name]: {
 			id: base.id,
 			maxRequestsPerSecond: config[base.id].maxRequestsPerSecond,
 			pollingInterval: config[base.id].pollingInterval,
 			ethGetLogsBlockRange: config[base.id].ethGetLogsBlockRange,
 			rpc: http(config[base.id].rpc),
-		},
-		[avalanche.name]: {
-			id: avalanche.id,
-			maxRequestsPerSecond: config[avalanche.id].maxRequestsPerSecond,
-			pollingInterval: config[avalanche.id].pollingInterval,
-			ethGetLogsBlockRange: config[avalanche.id].ethGetLogsBlockRange,
-			rpc: http(config[avalanche.id].rpc),
-		},
-		[gnosis.name]: {
-			id: gnosis.id,
-			maxRequestsPerSecond: config[gnosis.id].maxRequestsPerSecond,
-			pollingInterval: config[gnosis.id].pollingInterval,
-			ethGetLogsBlockRange: config[gnosis.id].ethGetLogsBlockRange,
-			rpc: http(config[gnosis.id].rpc),
-		},
-		[sonic.name]: {
-			id: sonic.id,
-			maxRequestsPerSecond: config[sonic.id].maxRequestsPerSecond,
-			pollingInterval: config[sonic.id].pollingInterval,
-			ethGetLogsBlockRange: config[sonic.id].ethGetLogsBlockRange,
-			rpc: http(config[sonic.id].rpc),
 		},
 	},
 	contracts: {
@@ -187,25 +127,9 @@ export default createConfig({
 					address: addr[arbitrum.id].ccipBridgedFrankencoin,
 					startBlock: config[arbitrum.id].startBridgedFrankencoin,
 				},
-				[optimism.name]: {
-					address: addr[optimism.id].ccipBridgedFrankencoin,
-					startBlock: config[optimism.id].startBridgedFrankencoin,
-				},
 				[base.name]: {
 					address: addr[base.id].ccipBridgedFrankencoin,
 					startBlock: config[base.id].startBridgedFrankencoin,
-				},
-				[avalanche.name]: {
-					address: addr[avalanche.id].ccipBridgedFrankencoin,
-					startBlock: config[avalanche.id].startBridgedFrankencoin,
-				},
-				[gnosis.name]: {
-					address: addr[gnosis.id].ccipBridgedFrankencoin,
-					startBlock: config[gnosis.id].startBridgedFrankencoin,
-				},
-				[sonic.name]: {
-					address: addr[sonic.id].ccipBridgedFrankencoin,
-					startBlock: config[sonic.id].startBridgedFrankencoin,
 				},
 			},
 		},
@@ -282,25 +206,9 @@ export default createConfig({
 					address: [addr[arbitrum.id].ccipBridgedSavings],
 					startBlock: config[arbitrum.id].startBridgedFrankencoin,
 				},
-				[optimism.name]: {
-					address: [addr[optimism.id].ccipBridgedSavings],
-					startBlock: config[optimism.id].startBridgedFrankencoin,
-				},
 				[base.name]: {
 					address: [addr[base.id].ccipBridgedSavings],
 					startBlock: config[base.id].startBridgedFrankencoin,
-				},
-				[avalanche.name]: {
-					address: [addr[avalanche.id].ccipBridgedSavings],
-					startBlock: config[avalanche.id].startBridgedFrankencoin,
-				},
-				[gnosis.name]: {
-					address: [addr[gnosis.id].ccipBridgedSavings],
-					startBlock: config[gnosis.id].startBridgedFrankencoin,
-				},
-				[sonic.name]: {
-					address: [addr[sonic.id].ccipBridgedSavings],
-					startBlock: config[sonic.id].startBridgedFrankencoin,
 				},
 			},
 		},
@@ -320,25 +228,9 @@ export default createConfig({
 					address: [addr[arbitrum.id].ccipBridgedSavings],
 					startBlock: config[arbitrum.id].startSavingsReferal,
 				},
-				[optimism.name]: {
-					address: [addr[optimism.id].ccipBridgedSavings],
-					startBlock: config[optimism.id].startSavingsReferal,
-				},
 				[base.name]: {
 					address: [addr[base.id].ccipBridgedSavings],
 					startBlock: config[base.id].startSavingsReferal,
-				},
-				[avalanche.name]: {
-					address: [addr[avalanche.id].ccipBridgedSavings],
-					startBlock: config[avalanche.id].startSavingsReferal,
-				},
-				[gnosis.name]: {
-					address: [addr[gnosis.id].ccipBridgedSavings],
-					startBlock: config[gnosis.id].startSavingsReferal,
-				},
-				[sonic.name]: {
-					address: [addr[sonic.id].ccipBridgedSavings],
-					startBlock: config[sonic.id].startSavingsReferal,
 				},
 			},
 		},
@@ -365,25 +257,9 @@ export default createConfig({
 					address: [addr[arbitrum.id].ccipBridgedFrankencoin],
 					startBlock: config[arbitrum.id].startBridgedFrankencoin,
 				},
-				[optimism.name]: {
-					address: [addr[optimism.id].ccipBridgedFrankencoin],
-					startBlock: config[optimism.id].startBridgedFrankencoin,
-				},
 				[base.name]: {
 					address: [addr[base.id].ccipBridgedFrankencoin],
 					startBlock: config[base.id].startBridgedFrankencoin,
-				},
-				[avalanche.name]: {
-					address: [addr[avalanche.id].ccipBridgedFrankencoin],
-					startBlock: config[avalanche.id].startBridgedFrankencoin,
-				},
-				[gnosis.name]: {
-					address: [addr[gnosis.id].ccipBridgedFrankencoin],
-					startBlock: config[gnosis.id].startBridgedFrankencoin,
-				},
-				[sonic.name]: {
-					address: [addr[sonic.id].ccipBridgedFrankencoin],
-					startBlock: config[sonic.id].startBridgedFrankencoin,
 				},
 			},
 		},
@@ -412,25 +288,9 @@ export default createConfig({
 					address: [addr[arbitrum.id].ccipBridgedFrankencoin],
 					startBlock: config[arbitrum.id].startBridgedFrankencoin,
 				},
-				[optimism.name]: {
-					address: [addr[optimism.id].ccipBridgedFrankencoin],
-					startBlock: config[optimism.id].startBridgedFrankencoin,
-				},
 				[base.name]: {
 					address: [addr[base.id].ccipBridgedFrankencoin],
 					startBlock: config[base.id].startBridgedFrankencoin,
-				},
-				[avalanche.name]: {
-					address: [addr[avalanche.id].ccipBridgedFrankencoin],
-					startBlock: config[avalanche.id].startBridgedFrankencoin,
-				},
-				[gnosis.name]: {
-					address: [addr[gnosis.id].ccipBridgedFrankencoin],
-					startBlock: config[gnosis.id].startBridgedFrankencoin,
-				},
-				[sonic.name]: {
-					address: [addr[sonic.id].ccipBridgedFrankencoin],
-					startBlock: config[sonic.id].startBridgedFrankencoin,
 				},
 			},
 		},
