@@ -21,13 +21,15 @@ import {
 
 export const addr = ADDRESS;
 
+const getLogsBlockRange = parseInt(process.env.ETH_GET_LOGS_BLOCK_RANGE || '10');
+
 export const config = {
 	// core deployment
 	[mainnet.id]: {
 		rpc: `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_RPC_KEY}`,
 		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '10'),
 		pollingInterval: parseInt(process.env.POLLING_INTERVAL_MS || '30000'),
-		ethGetLogsBlockRange: 500, // ~12s blocks
+		ethGetLogsBlockRange: getLogsBlockRange,
 		startFrankencoin: 18451518,
 		startMintingHubV1: 18451536,
 		startMintingHubV2: 21280757,
@@ -42,7 +44,7 @@ export const config = {
 		rpc: `https://polygon-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_RPC_KEY}`,
 		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '10'),
 		pollingInterval: parseInt(process.env.POLLING_INTERVAL_MS || '30000'),
-		ethGetLogsBlockRange: 2000, // ~2s blocks
+		ethGetLogsBlockRange: getLogsBlockRange,
 		startBridgedFrankencoin: 72384538,
 		startSavingsReferal: 72993144,
 	},
@@ -50,7 +52,7 @@ export const config = {
 		rpc: `https://arb-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_RPC_KEY}`,
 		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '10'),
 		pollingInterval: parseInt(process.env.POLLING_INTERVAL_MS || '30000'),
-		ethGetLogsBlockRange: 10000, // ~250ms blocks — batch more to reduce request count
+		ethGetLogsBlockRange: getLogsBlockRange,
 		startBridgedFrankencoin: 343470012,
 		startSavingsReferal: 349273896,
 	},
@@ -58,7 +60,7 @@ export const config = {
 		rpc: `https://opt-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_RPC_KEY}`,
 		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '10'),
 		pollingInterval: parseInt(process.env.POLLING_INTERVAL_MS || '30000'),
-		ethGetLogsBlockRange: 2000, // ~2s blocks
+		ethGetLogsBlockRange: getLogsBlockRange,
 		startBridgedFrankencoin: 136678320,
 		startSavingsReferal: 137404676,
 	},
@@ -66,7 +68,7 @@ export const config = {
 		rpc: `https://base-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_RPC_KEY}`,
 		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '10'),
 		pollingInterval: parseInt(process.env.POLLING_INTERVAL_MS || '30000'),
-		ethGetLogsBlockRange: 2000, // ~2s blocks
+		ethGetLogsBlockRange: getLogsBlockRange,
 		startBridgedFrankencoin: 31080190,
 		startSavingsReferal: 31809565,
 	},
@@ -74,7 +76,7 @@ export const config = {
 		rpc: `https://avax-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_RPC_KEY}`,
 		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '10'),
 		pollingInterval: parseInt(process.env.POLLING_INTERVAL_MS || '30000'),
-		ethGetLogsBlockRange: 2000, // ~2s blocks
+		ethGetLogsBlockRange: getLogsBlockRange,
 		startBridgedFrankencoin: 63337938,
 		startSavingsReferal: 64919925,
 	},
@@ -82,7 +84,7 @@ export const config = {
 		rpc: `https://gnosis-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_RPC_KEY}`,
 		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '10'),
 		pollingInterval: parseInt(process.env.POLLING_INTERVAL_MS || '30000'),
-		ethGetLogsBlockRange: 500, // ~5s blocks
+		ethGetLogsBlockRange: getLogsBlockRange,
 		startBridgedFrankencoin: 40394536,
 		startSavingsReferal: 40678291,
 	},
@@ -90,7 +92,7 @@ export const config = {
 		rpc: `https://sonic-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_RPC_KEY}`,
 		maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '10'),
 		pollingInterval: parseInt(process.env.POLLING_INTERVAL_MS || '30000'),
-		ethGetLogsBlockRange: 5000, // ~500ms blocks
+		ethGetLogsBlockRange: getLogsBlockRange,
 		startBridgedFrankencoin: 31589491,
 		startSavingsReferal: 34961851,
 	},
